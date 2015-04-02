@@ -4,9 +4,13 @@ library("XML")
 
 feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
 
-feedChildren2 <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
+feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
 
-feedChildren2[2]
+xmlChildren(feedItems[1]$channel.item)$title
+
+for (item in feedItems) {
+  print(xmlChildren(item)$title)
+}
 
 shinyServer(function(input, output) {
   #This code executes the user visits the site
