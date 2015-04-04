@@ -2,10 +2,9 @@
 #This code executes the app is launched.
 library("XML")
 
-feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
-#feed <- xmlTreeParse(file = "https://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
-
-
+#feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
+#feed <- xmlTreeParse(file = "http://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
+feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
 
 feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
 
@@ -25,8 +24,20 @@ first <- TRUE
 #print(xmlChildren(feedItems[aux]$channel.item))
 listItem <- xmlChildren(feedItems[aux]$channel.item)
 
+
+
 shinyServer(function(input, output) {
   #This code executes the user visits the site
+  updateListFeed <- function (input, cont, feedItems) {
+    if(!is.null(input$cbItems))
+      aux <- as.integer(input$cbItems) + cont
+    else
+      aux <- 1
+    #print(xmlChildren(feedItems[aux]$channel.item))
+    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    
+    #return (listItem)
+  }
   
   output$cbItems <- renderUI({
     if(input$nextPage){
@@ -42,13 +53,16 @@ shinyServer(function(input, output) {
         cont <- cont - 10
       }
     }
-    
+    print(cont)
     if(contAnt==cont)
-      selectedItem <- input$cbItems
+      if(!is.null(input$cbItems))
+        selectedItem <- as.integer(input$cbItems)
     else
-      selectedItem <- cont + 1
+      selectedItem <- contAnt + 1
     
-    if(cont+10>length(feedItems))
+    print(selectedItem)
+    
+    if(cont+10<length(feedItems))
       selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = cont+1:cont+10)
     else{
       selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = cont+1:length(feedItems))
@@ -57,34 +71,25 @@ shinyServer(function(input, output) {
   
   
   output$xmlTitle <- renderUI({
-    aux <- as.integer(input$cbItems) + cont
-    #print(xmlChildren(feedItems[aux]$channel.item))
-    listItem <- xmlChildren(feedItems[aux]$channel.item)
-    
+    listItem <- updateListFeed(input, cont, feedItems)
     title2 <- xmlValue(listItem$title)
     h4(title2)
   })
   
   output$xmlDescription <- renderUI({
-    aux <- as.integer(input$cbItems) + cont
-    #print(xmlChildren(feedItems[aux]$channel.item))
-    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    listItem <- updateListFeed(input, cont, feedItems)
     description <- xmlValue(listItem$description)
     p(description)
   })
   
   output$xmlInfo <- renderUI({
-    aux <- as.integer(input$cbItems) + cont
-    #print(xmlChildren(feedItems[aux]$channel.item))
-    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    listItem <- updateListFeed(input, cont, feedItems)
     info <- xmlValue(listItem$encoded)
     p(info)
   })
   
   output$xmlPubDate <- renderUI({
-    aux <- as.integer(input$cbItems) + cont
-    #print(xmlChildren(feedItems[aux]$channel.item))
-    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    listItem <- updateListFeed(input, cont, feedItems)
     pubDate <- xmlValue(listItem$pubDate)
     p(pubDate)
   })
