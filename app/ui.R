@@ -5,10 +5,7 @@ shinyUI(fluidPage(
     sidebarPanel(
       helpText("Choose the link you want job you want to see"),
       
-      selectInput("pageItem", 
-                  label = "Select the job:",
-                  choices = c(1:10),
-                  selected = 1),
+      uiOutput("cbItems"),
       
       
       actionButton(inputId = "prevPage",

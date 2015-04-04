@@ -3,6 +3,9 @@
 library("XML")
 
 feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
+#feed <- xmlTreeParse(file = "https://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
+
+
 
 feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
 
@@ -13,8 +16,10 @@ feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursiv
 # }
 
 cont <- 0
-
+contAnt <- cont
+selectedItem <- 1
 aux <- 1
+first <- TRUE
 
 #aux <- as.integer(input$pageItem) + cont
 #print(xmlChildren(feedItems[aux]$channel.item))
@@ -23,33 +28,45 @@ listItem <- xmlChildren(feedItems[aux]$channel.item)
 shinyServer(function(input, output) {
   #This code executes the user visits the site
   
-#   if(input$prevPage){
-#     cont <- cont + 10
-#   } else {
-#     if(cont!=0)
-#       cont <- cont - 10
-#   }
+  output$cbItems <- renderUI({
+    if(input$nextPage){
+      contAnt <- cont
+      cont <- cont + 10
+      if(cont>=length(feedItems)){
+        cont <- cont - 10
+      }
+    }
+    if(input$prevPage){
+      contAnt <- cont
+      if(cont!=0){
+        cont <- cont - 10
+      }
+    }
+    
+    if(contAnt==cont)
+      selectedItem <- input$cbItems
+    else
+      selectedItem <- cont + 1
+    
+    if(cont+10>length(feedItems))
+      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = cont+1:cont+10)
+    else{
+      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = cont+1:length(feedItems))
+    }
+  })
   
-   
   
   output$xmlTitle <- renderUI({
-    aux <- as.integer(input$pageItem) + cont
+    aux <- as.integer(input$cbItems) + cont
     #print(xmlChildren(feedItems[aux]$channel.item))
     listItem <- xmlChildren(feedItems[aux]$channel.item)
     
     title2 <- xmlValue(listItem$title)
-    #title2 <- listItem$title
-    #description <- listItem$description
-    #info <- listItem$encoded
-    #pubDate <- listItem$pubDate
     h4(title2)
-    #p(description)
-    #p(info) 
-    #p(date)
   })
   
   output$xmlDescription <- renderUI({
-    aux <- as.integer(input$pageItem) + cont
+    aux <- as.integer(input$cbItems) + cont
     #print(xmlChildren(feedItems[aux]$channel.item))
     listItem <- xmlChildren(feedItems[aux]$channel.item)
     description <- xmlValue(listItem$description)
@@ -57,7 +74,7 @@ shinyServer(function(input, output) {
   })
   
   output$xmlInfo <- renderUI({
-    aux <- as.integer(input$pageItem) + cont
+    aux <- as.integer(input$cbItems) + cont
     #print(xmlChildren(feedItems[aux]$channel.item))
     listItem <- xmlChildren(feedItems[aux]$channel.item)
     info <- xmlValue(listItem$encoded)
@@ -65,7 +82,7 @@ shinyServer(function(input, output) {
   })
   
   output$xmlPubDate <- renderUI({
-    aux <- as.integer(input$pageItem) + cont
+    aux <- as.integer(input$cbItems) + cont
     #print(xmlChildren(feedItems[aux]$channel.item))
     listItem <- xmlChildren(feedItems[aux]$channel.item)
     pubDate <- xmlValue(listItem$pubDate)
