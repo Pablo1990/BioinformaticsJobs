@@ -14,20 +14,22 @@ feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursiv
 #   print(xmlChildren(item)$title)
 # }
 
-cont <- 0
-contAnt <- cont
-selectedItem <- 1
-aux <- 1
-first <- TRUE
-
-#aux <- as.integer(input$pageItem) + cont
-#print(xmlChildren(feedItems[aux]$channel.item))
-listItem <- xmlChildren(feedItems[aux]$channel.item)
-
+siguientePage <- 0
 
 
 shinyServer(function(input, output) {
   #This code executes the user visits the site
+  cont <- 0
+  contAnt <- cont
+  selectedItem <- 1
+  aux <- 1
+  prevPage <- 0
+
+  #aux <- as.integer(input$pageItem) + cont
+  #print(xmlChildren(feedItems[aux]$channel.item))
+  listItem <- xmlChildren(feedItems[aux]$channel.item)
+  
+  
   updateListFeed <- function (input, cont, feedItems) {
     if(!is.null(input$cbItems))
       aux <- as.integer(input$cbItems) + cont
@@ -40,32 +42,36 @@ shinyServer(function(input, output) {
   }
   
   output$cbItems <- renderUI({
-    if(input$nextPage){
-      contAnt <- cont
-      cont <- cont + 10
-      if(cont>=length(feedItems)){
-        cont <- contAnt
-      }
-    }
-    if(input$prevPage){
-      contAnt <- cont
-      cont <- cont - 10
-      if(cont<0){
-        cont <- contAnt
-      }
-    }
-    print(cont)
-    if(contAnt==cont)
-      if(!is.null(input$cbItems))
-        selectedItem <- as.integer(input$cbItems)
-    else
-      selectedItem <- cont + 1
-    
-    if(cont+10<length(feedItems)){
-      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = (cont+1):(cont+10))
-    }else{
-      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = (cont+1):(length(feedItems)))
-    }
+#     if(input$nextPage != siguientePage){
+#       siguientePage = input$nextPage[1]
+#       
+#       contAnt <- cont
+#       cont <- cont + 10
+#       if(cont>=length(feedItems)){
+#         cont <- contAnt
+#       }
+#     }
+#     if(input$prevPage != prevPage){
+#       prevPage <- prevPage + 1
+#       
+#       contAnt <- cont
+#       cont <- cont - 10
+#       if(cont<0){
+#         cont <- contAnt
+#       }
+#     }
+    #print(cont)
+#     if(contAnt==cont)
+#       if(!is.null(input$cbItems))
+#         selectedItem <- as.integer(input$cbItems)
+#     else
+#       selectedItem <- cont + 1
+#     
+#     if(cont+10<length(feedItems)){
+#       selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = (cont+1):(cont+10))
+#     }else{
+       selectInput("cbItems", label = "Select job:", selected = 1, choices = (cont+1):(length(feedItems)))
+#     }
   })
   
   
