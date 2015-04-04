@@ -14,29 +14,62 @@ feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursiv
 
 cont <- 0
 
+aux <- 1
+
+#aux <- as.integer(input$pageItem) + cont
+#print(xmlChildren(feedItems[aux]$channel.item))
+listItem <- xmlChildren(feedItems[aux]$channel.item)
+
 shinyServer(function(input, output) {
   #This code executes the user visits the site
-  output$xmlOutput <- renderUI({
-    if(cont!=0){
-      if(input$prevPage){
-        cont <- cont + 10
-      } else {
-        cont <- cont - 10
-      }
-    }
-    aux <- as.integer(input$pageItem) + cont
   
-    print(xmlChildren(feedItems[aux]$channel.item))
+#   if(input$prevPage){
+#     cont <- cont + 10
+#   } else {
+#     if(cont!=0)
+#       cont <- cont - 10
+#   }
+  
+   
+  
+  output$xmlTitle <- renderUI({
+    aux <- as.integer(input$pageItem) + cont
+    #print(xmlChildren(feedItems[aux]$channel.item))
     listItem <- xmlChildren(feedItems[aux]$channel.item)
-    print("oeoe")
-    title <- listItem$title
-    description <- listItem$description
-    info <- listItem$encoded
-    date <- listItem$pubDate
-    paste(h1("title"), br(), 
-            p(description) , br() , 
-            p(info) , br() , 
-            p(date), br())
+    
+    title2 <- xmlValue(listItem$title)
+    #title2 <- listItem$title
+    #description <- listItem$description
+    #info <- listItem$encoded
+    #pubDate <- listItem$pubDate
+    h4(title2)
+    #p(description)
+    #p(info) 
+    #p(date)
+  })
+  
+  output$xmlDescription <- renderUI({
+    aux <- as.integer(input$pageItem) + cont
+    #print(xmlChildren(feedItems[aux]$channel.item))
+    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    description <- xmlValue(listItem$description)
+    p(description)
+  })
+  
+  output$xmlInfo <- renderUI({
+    aux <- as.integer(input$pageItem) + cont
+    #print(xmlChildren(feedItems[aux]$channel.item))
+    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    info <- xmlValue(listItem$encoded)
+    p(info)
+  })
+  
+  output$xmlPubDate <- renderUI({
+    aux <- as.integer(input$pageItem) + cont
+    #print(xmlChildren(feedItems[aux]$channel.item))
+    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    pubDate <- xmlValue(listItem$pubDate)
+    p(pubDate)
   })
   
 })

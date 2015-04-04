@@ -18,7 +18,10 @@ shinyUI(fluidPage(
     ),
     
     mainPanel(
-      uiOutput("xmlOutput")
+      uiOutput("xmlTitle"),
+      uiOutput("xmlDescription"),
+      uiOutput("xmlInfo"),
+      uiOutput("xmlPubDate")
     )
   )
 ))
