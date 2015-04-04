@@ -44,13 +44,14 @@ shinyServer(function(input, output) {
       contAnt <- cont
       cont <- cont + 10
       if(cont>=length(feedItems)){
-        cont <- cont - 10
+        cont <- contAnt
       }
     }
     if(input$prevPage){
       contAnt <- cont
-      if(cont!=0){
-        cont <- cont - 10
+      cont <- cont - 10
+      if(cont<0){
+        cont <- contAnt
       }
     }
     print(cont)
@@ -58,14 +59,12 @@ shinyServer(function(input, output) {
       if(!is.null(input$cbItems))
         selectedItem <- as.integer(input$cbItems)
     else
-      selectedItem <- contAnt + 1
+      selectedItem <- cont + 1
     
-    print(selectedItem)
-    
-    if(cont+10<length(feedItems))
-      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = cont+1:cont+10)
-    else{
-      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = cont+1:length(feedItems))
+    if(cont+10<length(feedItems)){
+      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = (cont+1):(cont+10))
+    }else{
+      selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = (cont+1):(length(feedItems)))
     }
   })
   
