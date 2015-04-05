@@ -46,6 +46,11 @@ shinyServer(function(input, output) {
 	<li>C/C++</li>
 	<li>HTML5/Javascript/Php</li>
 </ul>
+<i>Languages:</i>
+<ul>
+  <li>Spanish native</li>
+	<li>English (Certificated by <a href=\"https://certs.duolingo.com/u2a8u3uc\">Duolingo</a>).</li>
+</ul>
 <i>Programming tools:</i>
 <ul>
 	<li>Git</li>
@@ -53,9 +58,8 @@ shinyServer(function(input, output) {
 	<li>General IDEs: Eclipse, netbeans, Rstudio, ...</li>
 </ul>
 ")
-    }else if(input$whatYouSee == "Languages"){
-      HTML("Spanish native and English proficient (Certificated by Duolingo).")
-      #programming languages here?
+    }else if(input$whatYouSee == "Hobbies"){
+      HTML("Basketball, Monica")
     }else if(input$whatYouSee == "Education"){
       HTML("<p>I'd like you to tell a <i>story</i>... 
            When I was a young boy (around 17s)</p>")
@@ -133,6 +137,10 @@ shinyServer(function(input, output) {
     description <- xmlValue(listItem$description)
     info <- xmlValue(listItem$encoded)
     pubDate <- xmlValue(listItem$pubDate)
-    HTML(paste(c(description, info, pubDate), collapse=' '))
+    #aux <- split(pubDate)
+    aux2 <- strsplit(pubDate, split = " ")
+    aux2 <- aux2[[1]]
+    pubDate <- paste(c(aux2[2], aux2[3], aux2[4]), collapse='-')
+    HTML(paste(c(pubDate, "<br/><br/>", description, info), collapse=' '))
   })
 })

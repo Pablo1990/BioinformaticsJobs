@@ -7,7 +7,7 @@ shinyUI(
                           #img(src = "avatar.JPG", heigth = '50%', width = '50%'),
                           radioButtons("whatYouSee",label = "What do you want to know about me?", 
                                        choices = list("Profile" = "Profile", "Skills" = "Skills", 
-                                                      "Education" = "Education", "Languages" = "Languages"
+                                                      "Education" = "Education", "Hobbies" = "Hobbies"
                                                       , "Other" = "Other"))
                         ),
                         #http://shiny.rstudio.com/gallery/including-html-text-and-markdown-files.html
