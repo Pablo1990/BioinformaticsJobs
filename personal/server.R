@@ -3,9 +3,9 @@
 
 library("XML")
 
-#feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
+feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
 #feed <- xmlTreeParse(file = "http://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
-feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
+#feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
 
 feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
 
@@ -125,24 +125,14 @@ shinyServer(function(input, output) {
   output$xmlTitle <- renderUI({
     listItem <- updateListFeed(input, cont, feedItems)
     title2 <- xmlValue(listItem$title)
-    h4(title2)
+    h3(title2)
   })
   
   output$xmlDescription <- renderUI({
     listItem <- updateListFeed(input, cont, feedItems)
     description <- xmlValue(listItem$description)
-    p(description)
-  })
-  
-  output$xmlInfo <- renderUI({
-    listItem <- updateListFeed(input, cont, feedItems)
     info <- xmlValue(listItem$encoded)
-    p(info)
-  })
-  
-  output$xmlPubDate <- renderUI({
-    listItem <- updateListFeed(input, cont, feedItems)
     pubDate <- xmlValue(listItem$pubDate)
-    p(pubDate)
+    HTML(paste(c(description, info, pubDate), collapse=' '))
   })
 })

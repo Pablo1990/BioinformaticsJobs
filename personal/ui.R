@@ -17,6 +17,9 @@ shinyUI(
                         )
                       )
              ),
+             
+             #------------------------------------------------
+             
              tabPanel("Jobs page",
                       sidebarLayout(
                         sidebarPanel(
@@ -27,9 +30,7 @@ shinyUI(
                         
                         mainPanel(
                           uiOutput("xmlTitle"),
-                          uiOutput("xmlDescription"),
-                          uiOutput("xmlInfo"),
-                          uiOutput("xmlPubDate")
+                          uiOutput("xmlDescription")
                         )
                       )
              )
