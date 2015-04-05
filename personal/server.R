@@ -4,10 +4,11 @@
 library("XML")
 
 feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
-#feed <- xmlTreeParse(file = "http://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
-#feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
+#feed2 <- xmlTreeParse(file = "http://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
+feed3 <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
 
 feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
+feedItems <- list(feedItems, xmlElementsByTagName(feed3$doc$children$rss, name = "item", recursive = TRUE))
 
 #xmlChildren(feedItems[1]$channel.item)
 
@@ -73,21 +74,33 @@ shinyServer(function(input, output) {
   cont <- 0
   contAnt <- cont
   selectedItem <- 1
-  aux <- 1
+  #aux <- 1
   prevPage <- 0
   
   #aux <- as.integer(input$pageItem) + cont
   #print(xmlChildren(feedItems[aux]$channel.item))
-  listItem <- xmlChildren(feedItems[aux]$channel.item)
+  listItem <- xmlChildren(feedItems[[1]][1]$channel.item)
   
   
   updateListFeed <- function (input, cont, feedItems) {
-    if(!is.null(input$cbItems))
-      aux <- as.integer(input$cbItems) + cont
-    else
-      aux <- 1
+    if(!is.null(input$cbItems)){
+      numFeed <- 0
+      totalLength <- 0
+      for (feedItem in feedItems){
+        totalLength <- totalLength + length(feedItem)
+        numFeed <- numFeed + 1
+        if(as.integer(input$cbItems) < totalLength){
+          totalLength <- totalLength - length(feedItem)
+          break
+        }
+      }
+      listItem <- xmlChildren(feedItems[[numFeed]][as.integer(input$cbItems) - totalLength]$channel.item)
+    }else
+      listItem <- xmlChildren(feedItems[[1]][1]$channel.item)
+    
     #print(xmlChildren(feedItems[aux]$channel.item))
-    listItem <- xmlChildren(feedItems[aux]$channel.item)
+    
+    
     
     #return (listItem)
   }
@@ -121,7 +134,11 @@ shinyServer(function(input, output) {
     #     if(cont+10<length(feedItems)){
     #       selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = (cont+1):(cont+10))
     #     }else{
-    selectInput("cbItems", label = "Select job:", selected = 1, choices = (cont+1):(length(feedItems)))
+    lengthFeed <- 0 
+    for (feedItem in feedItems) {
+      lengthFeed <- lengthFeed + length(feedItem)
+    }
+    selectInput("cbItems", label = "Select job:", selected = 1, choices = (cont+1):(lengthFeed))
     #     }
   })
   
@@ -137,7 +154,6 @@ shinyServer(function(input, output) {
     description <- xmlValue(listItem$description)
     info <- xmlValue(listItem$encoded)
     pubDate <- xmlValue(listItem$pubDate)
-    #aux <- split(pubDate)
     aux2 <- strsplit(pubDate, split = " ")
     aux2 <- aux2[[1]]
     pubDate <- paste(c(aux2[2], aux2[3], aux2[4]), collapse='-')
