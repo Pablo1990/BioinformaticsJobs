@@ -5,10 +5,10 @@ library("XML")
 
 feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
 #feed2 <- xmlTreeParse(file = "http://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
-feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
+feedItemsInab <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
 
 feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
-feedItems <- list(feedItems, xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE))
+feedItemsMadrid <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
 
 # url = "http://www.bioinformatics.org/jobs/?group_id=101&summaries=1"
 # doc = htmlTreeParse(url, useInternalNodes = T)
@@ -18,6 +18,8 @@ feedItems <- list(feedItems, xmlElementsByTagName(feed$doc$children$rss, name = 
 # linksNames <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlValue)
 
 #siguientePage <- 0
+
+remove(feed)
 
 shinyServer(function(input, output) {
   #This code executes the user visits the site
@@ -80,78 +82,46 @@ shinyServer(function(input, output) {
   
   #aux <- as.integer(input$pageItem) + cont
   #print(xmlChildren(feedItems[aux]$channel.item))
-  listItem <- xmlChildren(feedItems[[1]][1]$channel.item)
+  listItem <- xmlChildren(feedItemsInab[1]$channel.item)
   
   
-  updateListFeed <- function (input, cont, feedItems) {
+  updateListFeed <- function (input, cont) {
     if(!is.null(input$cbItems)){
-      numFeed <- 0
-      totalLength <- 0
-      for (feedItem in feedItems){
-        totalLength <- totalLength + length(feedItem)
-        numFeed <- numFeed + 1
-        if(as.integer(input$cbItems) < totalLength){
-          totalLength <- totalLength - length(feedItem)
-          break
-        }
+      if(input$provider == "inab.org"){
+        listItem <- xmlChildren(feedItemsInab[as.integer(input$cbItems)]$channel.item)
+      } else if(input$provider == "madrimasd.org"){
+        listItem <- xmlChildren(feedItemsMadrid[as.integer(input$cbItems)]$channel.item)
+      } else {
+        #listItem <- xmlChildren(feedItemsBioinfo[as.integer(input$cbItems)]$channel.item)
       }
-      listItem <- xmlChildren(feedItems[[numFeed]][as.integer(input$cbItems) - totalLength]$channel.item)
     }else
-      listItem <- xmlChildren(feedItems[[1]][1]$channel.item)
-    
-    #print(xmlChildren(feedItems[aux]$channel.item))
-    
-    
-    
-    #return (listItem)
+      listItem <- xmlChildren(feedItemsInab[1]$channel.item)
   }
   
   output$cbItems <- renderUI({
-    #     if(input$nextPage != siguientePage){
-    #       siguientePage = input$nextPage[1]
-    #       
-    #       contAnt <- cont
-    #       cont <- cont + 10
-    #       if(cont>=length(feedItems)){
-    #         cont <- contAnt
-    #       }
-    #     }
-    #     if(input$prevPage != prevPage){
-    #       prevPage <- prevPage + 1
-    #       
-    #       contAnt <- cont
-    #       cont <- cont - 10
-    #       if(cont<0){
-    #         cont <- contAnt
-    #       }
-    #     }
-    #print(cont)
-    #     if(contAnt==cont)
-    #       if(!is.null(input$cbItems))
-    #         selectedItem <- as.integer(input$cbItems)
-    #     else
-    #       selectedItem <- cont + 1
-    #     
-    #     if(cont+10<length(feedItems)){
-    #       selectInput("cbItems", label = "Select job:", selected = selectedItem, choices = (cont+1):(cont+10))
-    #     }else{
     lengthFeed <- 0 
-    for (feedItem in feedItems) {
-      lengthFeed <- lengthFeed + length(feedItem)
+    
+    if(input$provider == "inab.org"){
+      lengthFeed <- length(feedItemsInab)
+    }else if(input$provider == "madrimasd.org"){
+      lengthFeed <- length(feedItemsMadrid)
+    }else{
+      lengthFeed <- 25
     }
+    
     selectInput("cbItems", label = "Select job:", selected = 1, choices = (cont+1):(lengthFeed))
     #     }
   })
   
   
   output$xmlTitle <- renderUI({
-    listItem <- updateListFeed(input, cont, feedItems)
+    listItem <- updateListFeed(input, cont)
     title2 <- xmlValue(listItem$title)
     h3(title2)
   })
   
   output$xmlDescription <- renderUI({
-    listItem <- updateListFeed(input, cont, feedItems)
+    listItem <- updateListFeed(input, cont)
     description <- xmlValue(listItem$description)
     #info <- xmlValue(listItem$encoded)
     pubDate <- xmlValue(listItem$pubDate)
