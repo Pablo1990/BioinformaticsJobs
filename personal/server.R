@@ -10,12 +10,12 @@ feedItemsInab <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recu
 feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
 feedItemsMadrid <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
 
-# url = "http://www.bioinformatics.org/jobs/?group_id=101&summaries=1"
-# doc = htmlTreeParse(url, useInternalNodes = T)
-# 
-# links <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlAttrs)
-# #the first item is useless
-# linksNames <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlValue)
+url <- "http://www.bioinformatics.org/jobs/?group_id=101&summaries=1"
+doc <- htmlTreeParse(url, useInternalNodes = T)
+
+links <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlAttrs)
+#the first item is useless
+linksNames <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlValue)
 
 #siguientePage <- 0
 
@@ -91,8 +91,6 @@ shinyServer(function(input, output) {
         listItem <- xmlChildren(feedItemsInab[as.integer(input$cbItems)]$channel.item)
       } else if(input$provider == "madrimasd.org"){
         listItem <- xmlChildren(feedItemsMadrid[as.integer(input$cbItems)]$channel.item)
-      } else {
-        #listItem <- xmlChildren(feedItemsBioinfo[as.integer(input$cbItems)]$channel.item)
       }
     }else
       listItem <- xmlChildren(feedItemsInab[1]$channel.item)
@@ -117,14 +115,25 @@ shinyServer(function(input, output) {
   output$xmlTitle <- renderUI({
     listItem <- updateListFeed(input, cont)
     title2 <- xmlValue(listItem$title)
+    if(input$provider == "Bioinformatics.org"){
+      title2 <- linksNames[as.integer(input$cbItems)+1]
+    }
     h3(title2)
   })
   
   output$xmlDescription <- renderUI({
     listItem <- updateListFeed(input, cont)
-    description <- xmlValue(listItem$description)
-    #info <- xmlValue(listItem$encoded)
-    pubDate <- xmlValue(listItem$pubDate)
+    description <- NA
+    pubDate <- NA
+    
+    if(input$provider == "Bioinformatics.org"){
+      description <-  paste(c('<a href="http://www.bioinformatics.org/',links[as.integer(input$cbItems)+1],'">Link offer</a>'), collapse='')
+    } else {
+      description <- xmlValue(listItem$description)
+      #info <- xmlValue(listItem$encoded)
+      pubDate <- xmlValue(listItem$pubDate)
+    }
+    
     if(!is.na(pubDate)){
       aux2 <- strsplit(pubDate, split = " ")
       aux2 <- aux2[[1]]
