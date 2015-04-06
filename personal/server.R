@@ -10,12 +10,12 @@ feedItems <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursiv
 feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
 feedItems <- list(feedItems, xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE))
 
-url = "http://www.bioinformatics.org/jobs/?group_id=101&summaries=1"
-doc = htmlTreeParse(url, useInternalNodes = T)
-
-links <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlAttrs)
-#the first item is useless
-linksNames <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlValue)
+# url = "http://www.bioinformatics.org/jobs/?group_id=101&summaries=1"
+# doc = htmlTreeParse(url, useInternalNodes = T)
+# 
+# links <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlAttrs)
+# #the first item is useless
+# linksNames <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlValue)
 
 #siguientePage <- 0
 

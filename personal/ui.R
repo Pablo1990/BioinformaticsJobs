@@ -21,6 +21,19 @@ shinyUI(
              #------------------------------------------------
              
              tabPanel("Jobs page",
+                      fluidRow(
+                        column(4,
+                               radioButtons("provider", label = h4("Choose the jobs provider:"),
+                                            choices = list("Bioinformatics.org" = "Bioinformatics.org",
+                                                           "inab.org" = "inab.org", 
+                                                           "madrimasd.org" = "madridmasd.org"))
+                               ),
+                        column(8,
+                               
+                               uiOutput("xmlTitle"),
+                               uiOutput("xmlDescription"))
+                        
+                      ),
                       sidebarLayout(
                         sidebarPanel(
                           helpText("Choose the link you want job you want to see"),
@@ -29,8 +42,6 @@ shinyUI(
                         ),
                         
                         mainPanel(
-                          uiOutput("xmlTitle"),
-                          uiOutput("xmlDescription")
                         )
                       )
              )
