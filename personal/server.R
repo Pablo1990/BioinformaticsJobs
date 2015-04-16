@@ -62,7 +62,18 @@ My sports is basketball, i really love play basket. But I enjoy play any kind of
 Checkout my profile on goodreads: <a href=\"https://www.goodreads.com/user/show/15879081-pablo-vicente-vicente\">profile</a>.")
     }else if(input$whatYouSee == "Education"){
       HTML("<p>I'd like you to tell a <i>story</i>... 
-           When I was a young boy (around 17s)</p>")
+           When I was a young boy (around 17s), I didn't know what to do with my life. 
+           By those days, I wanted to be architect or aerospatial engineer... 
+           What a crazy idea, huh? I also like computers and my parents conviced
+           me to study <b>computer science at the University of Alicante</b>. 
+           That was the <b><i>best</i></b> decision I've ever made in my professional life.</p>
+           <p>Another milestone in my life was my dissertation. 
+           In the last years of the University I changed my mind aboute myself.
+           I had to finish my <i>(5 years) degree</i> (actually it's not a degree).
+           I was committed to work hard and achieve what I wanted.
+           My dissertation was with <i>Francisco Escolano</i> and he start the
+           path in which i am right now: the <b>MSc in Bioinformatics</b>,
+           with special emphasis in <b>complex networks</b>.</p>")
     }else {
       HTML("<h3>Events</h3>
 

@@ -20,8 +20,8 @@ shinyUI(
                                  )
                         )
                       )
-             #),
-             )
+             ),
+             
              #------------------------------------------------
              
 #              tabPanel("Jobs page",
@@ -43,5 +43,9 @@ shinyUI(
 #                         )
 #                       )
 #              )
+            footer = HTML("<footer style=\"margin-top: 2%; border-top: 1px solid #e5e5e5; padding-top: 2%; text-align: center; color: #767676;\">
+                          <i>Special thanks to: Mónica Martínez Farias, Francisco Escolano & my family.</i>
+                            </footer>")
+
   )
 )
