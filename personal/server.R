@@ -88,90 +88,90 @@ In my university years, i've contributed to several projects (solo or group-base
   })
   
   #----------------- Jobs code --------------------#
-  cont <- 0
-  contAnt <- cont
-  selectedItem <- 1
-  #aux <- 1
-  prevPage <- 0
-  
-  feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
-  #feed2 <- xmlTreeParse(file = "http://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
-  feedItemsInab <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
-  
-  feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
-  feedItemsMadrid <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
-  
-  url <- "http://www.bioinformatics.org/jobs/?group_id=101&summaries=1"
-  doc <- htmlTreeParse(url, useInternalNodes = T)
-  
-  links <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlAttrs)
-  #the first item is useless
-  linksNames <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlValue)
-  
-  #siguientePage <- 0
-  
-  #aux <- as.integer(input$pageItem) + cont
-  #print(xmlChildren(feedItems[aux]$channel.item))
-  listItem <- xmlChildren(feedItemsInab[1]$channel.item)
-  
-  
-  updateListFeed <- function (input, cont) {
-    if(!is.null(input$cbItems)){
-      if(input$provider == "inab.org"){
-        listItem <- xmlChildren(feedItemsInab[as.integer(input$cbItems)]$channel.item)
-      } else if(input$provider == "madrimasd.org"){
-        listItem <- xmlChildren(feedItemsMadrid[as.integer(input$cbItems)]$channel.item)
-      }
-    }else
-      listItem <- xmlChildren(feedItemsInab[1]$channel.item)
-  }
-  
-  output$cbItems <- renderUI({
-    lengthFeed <- 0 
-    
-    if(input$provider == "inab.org"){
-      lengthFeed <- length(feedItemsInab)
-    }else if(input$provider == "madrimasd.org"){
-      lengthFeed <- length(feedItemsMadrid)
-    }else{
-      lengthFeed <- 25
-    }
-    
-    selectInput("cbItems", label = "Select job:", selected = 1, choices = (cont+1):(lengthFeed))
-    #     }
-  })
-  
-  
-  output$xmlTitle <- renderUI({
-    listItem <- updateListFeed(input, cont)
-    title2 <- xmlValue(listItem$title)
-    if(input$provider == "Bioinformatics.org"){
-      title2 <- linksNames[as.integer(input$cbItems)+1]
-    }
-    h3(title2)
-  })
-  
-  output$xmlDescription <- renderUI({
-    listItem <- updateListFeed(input, cont)
-    description <- NA
-    pubDate <- NA
-    
-    if(input$provider == "Bioinformatics.org"){
-      description <-  paste(c('<a href="http://www.bioinformatics.org/',links[as.integer(input$cbItems)+1],'">Link offer</a>'), collapse='')
-    } else {
-      description <- xmlValue(listItem$description)
-      #info <- xmlValue(listItem$encoded)
-      pubDate <- xmlValue(listItem$pubDate)
-    }
-    
-    if(!is.na(pubDate)){
-      aux2 <- strsplit(pubDate, split = " ")
-      aux2 <- aux2[[1]]
-      pubDate <- paste(c(aux2[2], aux2[3], aux2[4]), collapse='-')
-      
-      HTML(paste(c(pubDate, "<br/><br/>", description), collapse=' '))
-    } else {
-      HTML(description)
-    }
-  })
+#   cont <- 0
+#   contAnt <- cont
+#   selectedItem <- 1
+#   #aux <- 1
+#   prevPage <- 0
+#   
+#   feed <- xmlTreeParse(file = "http://www.inab.org/category/job-opportunities/feed/", isURL = TRUE)
+#   #feed2 <- xmlTreeParse(file = "http://www.mathjobs.org/jobs?joblist-0-----rss", isURL = TRUE)
+#   feedItemsInab <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
+#   
+#   feed <- xmlTreeParse(file = "http://www.madrimasd.org/informacionidi/noticias/rss/empleo.ashx", isURL = TRUE)
+#   feedItemsMadrid <- xmlElementsByTagName(feed$doc$children$rss, name = "item", recursive = TRUE)
+#   
+#   url <- "http://www.bioinformatics.org/jobs/?group_id=101&summaries=1"
+#   doc <- htmlTreeParse(url, useInternalNodes = T)
+#   
+#   links <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlAttrs)
+#   #the first item is useless
+#   linksNames <- xpathSApply(doc, "//a[contains(@href, 'forums')]", xmlValue)
+#   
+#   #siguientePage <- 0
+#   
+#   #aux <- as.integer(input$pageItem) + cont
+#   #print(xmlChildren(feedItems[aux]$channel.item))
+#   listItem <- xmlChildren(feedItemsInab[1]$channel.item)
+#   
+#   
+#   updateListFeed <- function (input, cont) {
+#     if(!is.null(input$cbItems)){
+#       if(input$provider == "inab.org"){
+#         listItem <- xmlChildren(feedItemsInab[as.integer(input$cbItems)]$channel.item)
+#       } else if(input$provider == "madrimasd.org"){
+#         listItem <- xmlChildren(feedItemsMadrid[as.integer(input$cbItems)]$channel.item)
+#       }
+#     }else
+#       listItem <- xmlChildren(feedItemsInab[1]$channel.item)
+#   }
+#   
+#   output$cbItems <- renderUI({
+#     lengthFeed <- 0 
+#     
+#     if(input$provider == "inab.org"){
+#       lengthFeed <- length(feedItemsInab)
+#     }else if(input$provider == "madrimasd.org"){
+#       lengthFeed <- length(feedItemsMadrid)
+#     }else{
+#       lengthFeed <- 25
+#     }
+#     
+#     selectInput("cbItems", label = "Select job:", selected = 1, choices = (cont+1):(lengthFeed))
+#     #     }
+#   })
+#   
+#   
+#   output$xmlTitle <- renderUI({
+#     listItem <- updateListFeed(input, cont)
+#     title2 <- xmlValue(listItem$title)
+#     if(input$provider == "Bioinformatics.org"){
+#       title2 <- linksNames[as.integer(input$cbItems)+1]
+#     }
+#     h3(title2)
+#   })
+#   
+#   output$xmlDescription <- renderUI({
+#     listItem <- updateListFeed(input, cont)
+#     description <- NA
+#     pubDate <- NA
+#     
+#     if(input$provider == "Bioinformatics.org"){
+#       description <-  paste(c('<a href="http://www.bioinformatics.org/',links[as.integer(input$cbItems)+1],'">Link offer</a>'), collapse='')
+#     } else {
+#       description <- xmlValue(listItem$description)
+#       #info <- xmlValue(listItem$encoded)
+#       pubDate <- xmlValue(listItem$pubDate)
+#     }
+#     
+#     if(!is.na(pubDate)){
+#       aux2 <- strsplit(pubDate, split = " ")
+#       aux2 <- aux2[[1]]
+#       pubDate <- paste(c(aux2[2], aux2[3], aux2[4]), collapse='-')
+#       
+#       HTML(paste(c(pubDate, "<br/><br/>", description), collapse=' '))
+#     } else {
+#       HTML(description)
+#     }
+#   })
 })
