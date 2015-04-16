@@ -15,8 +15,13 @@ shinyUI(
                                  uiOutput(outputId = "h1"),
                                  uiOutput(outputId = "outputText")),
                           column(4,
-                                 br(),
-                                 img(src = "avatar.jpg", heigth = '100%', width = '100%', style = "border-radius: 100%;")
+                                 img(src = "avatar.jpg", heigth = '100%', width = '100%', style = "border-radius: 100%; text-align=center;"),
+                                 br(), br(),
+                                 HTML("<a class=\"twitter-timeline\" height=\"230px\" href=\"https://twitter.com/Pablo_1990\" 
+                                      data-widget-id=\"588653808970035200\">Tweets por el @Pablo_1990.</a> <script>!function(d,s,id)
+                                      {var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+                                      if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\"://platform.twitter.com/widgets.js\";
+                                      fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>")
                                  )
                         )
                       )
