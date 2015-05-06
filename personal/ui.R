@@ -8,6 +8,9 @@ shinyUI(
                                        choices = list("Profile" = "Profile", "Skills" = "Skills", 
                                                       "Education" = "Education", "Hobbies" = "Hobbies"
                                                       , "Other" = "Other"))
+                        , HTML("<a href=\"https://es.linkedin.com/pub/pablo-vicente-munuera/2b/3a5/819\">
+                                      <img src=\"https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x25_es_ES.png?locale=\" 
+                                      width=\"160\" height=\"25\" border=\"0\" alt=\"Ver el perfil de Pablo Vicente Munuera en LinkedIn\"></a>")
                         ),
                         #http://shiny.rstudio.com/gallery/including-html-text-and-markdown-files.html
                         mainPanel(
@@ -21,7 +24,8 @@ shinyUI(
                                       data-widget-id=\"588653808970035200\">Tweets por el @Pablo_1990.</a> <script>!function(d,s,id)
                                       {var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
                                       if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\"://platform.twitter.com/widgets.js\";
-                                      fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>")
+                                      fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>
+                                      ")
                                  )
                         )
                       )
