@@ -4,4 +4,4 @@ runApp("personal")
 #runGitHub(repo="BioinformaticsJobs", name = "Pablo1990", subdir = 'personal')
 #run
 #library(shinyapps)
-#shinyapps::deployApp('personal')
+shinyapps::deployApp('personal',appDir = 'personal')
